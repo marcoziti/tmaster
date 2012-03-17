@@ -1,0 +1,7 @@
+FLTK_WRAP_UI(Ui tmaster.fl)
+ADD_LIBRARY(Ui tmaster.cxx ${Ui_FLTK_UI_SRCS})
+
+ADD_EXECUTABLE(tmaster tmaster.cxx)
+ADD_DEPENDENCIES(tmaster Ui)
+TARGET_LINK_LIBRARIES(tmaster Ui)
+TARGET_LINK_LIBRARIES(tmaster ${FLTK_LIBRARIES})

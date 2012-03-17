@@ -1,0 +1,118 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0300 
+header_name {.h} 
+code_name {.cxx}
+decl {int status = 0;} {
+  comment {0 - no start. start possible
+1 - running, stop possible
+2 - stopped, reset possible
+} private local
+} 
+
+decl {int curr_Elapsed = 0;} {private local
+} 
+
+decl {const int time_length = 2; // min} {private local
+} 
+
+Function {Get_NextAction(int s)} {return_type {const int}
+} {
+  code {switch(s){
+	case 0: return 1;
+	case 1: return 2;
+	case 2: return 0;
+}} {}
+} 
+
+Function {Reset()} {open return_type void
+} {
+  code {Fl::remove_timeout((Fl_Timeout_Handler)Timeout_Callback, NULL); 
+btn_CurrStatus->label("@+2>");
+
+status = 0;
+curr_Elapsed = 0;
+const int curr_Remaining = time_length * 60 - curr_Elapsed;
+
+ticker->value(0);
+int curr_Min = int(curr_Remaining / 60);
+int curr_Sec = int(curr_Remaining % 60);
+char buf[255];
+sprintf(buf, "%02d:%02d", curr_Min, curr_Sec);
+lbl_Remaining->copy_label(buf);} {}
+} 
+
+Function {Window_Callback(Fl_Widget*, void*)} {return_type {static void}
+} {
+  code {if(!Fl::has_timeout((Fl_Timeout_Handler)Timeout_Callback, NULL))
+	Fl::remove_timeout((Fl_Timeout_Handler)Timeout_Callback, NULL);} {}
+} 
+
+Function {Widget_Callback(Fl_Widget*, void*)} {open return_type void
+} {
+  code {const int i = status = Get_NextAction(status);
+if(1 == i){
+	// running
+		Fl::add_timeout(1, (Fl_Timeout_Handler)Timeout_Callback, NULL);
+	btn_CurrStatus->label("@+2||");
+}
+else{
+	if(2 == i) {
+		Fl::remove_timeout((Fl_Timeout_Handler)Timeout_Callback, NULL); 
+		btn_CurrStatus->label("@+2>|"); 
+	}
+	else 
+		Reset();
+}} {}
+} 
+
+Function {Timeout_Callback(Fl_Widget*, void*)} {open return_type {static void}
+} {
+  code {curr_Elapsed++;
+const int curr_Remaining = time_length * 60 - curr_Elapsed;
+if(0 >= curr_Remaining){
+	return Reset();
+}
+
+printf("\\007");fflush(stdout);
+const float percent = 100 - curr_Remaining * 100/(time_length * 60);
+
+ticker->value(percent);
+int curr_Min = int(curr_Remaining / 60);
+int curr_Sec = int(curr_Remaining % 60);
+char buf[255];
+sprintf(buf, "%02d:%02d", curr_Min, curr_Sec);
+lbl_Remaining->copy_label(buf);
+Fl::repeat_timeout(1, (Fl_Timeout_Handler)Timeout_Callback, NULL);} {selected
+  }
+} 
+
+Function {} {open
+} {
+  Fl_Window main_Window {
+    label {Master Your Time}
+    user_data {"main_Window"} open
+    xywh {54 544 942 62} type Single align 80 hide
+    code0 {ticker->maximum(100);}
+    code1 {ticker->minimum(0);}
+    code2 {Reset();} non_modal
+  } {
+    Fl_Progress ticker {
+      xywh {120 0 825 65} box FLAT_BOX selection_color 1
+      code0 {ticker->maximum(100);}
+      code1 {ticker->minimum(0);}
+    }
+    Fl_Button btn_CurrStatus {
+      label {@>}
+      user_data {"btn_CurrStatus"}
+      callback Widget_Callback
+      tooltip {Start/Pause/Reset (Alt + S)} xywh {90 0 30 65} box FLAT_BOX down_box FLAT_BOX shortcut 0x80073 labelcolor 4
+    }
+    Fl_Box lbl_Remaining {
+      label label
+      xywh {2 1 88 60} labeltype EMBOSSED_LABEL labelfont 1 labelsize 34 labelcolor 4
+    }
+  }
+} 
+
+Function {make_window()} {open
+} {} 
