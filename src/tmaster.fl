@@ -2,6 +2,9 @@
 version 1.0300 
 header_name {.h} 
 code_name {.cxx}
+decl {\#include <FL/fl_ask.h>} {private local
+} 
+
 decl {int status = 0;} {
   comment {0 - no start. start possible
 1 - running, stop possible
@@ -73,7 +76,8 @@ if(0 >= curr_Remaining){
 	return Reset();
 }
 
-printf("\\007");fflush(stdout);
+//printf("\\007");fflush(stdout);
+fl_beep();
 const float percent = 100 - curr_Remaining * 100/(time_length * 60);
 
 ticker->value(percent);
