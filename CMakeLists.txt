@@ -9,11 +9,17 @@ SET(FLTK_LIBRARIES "${FLTK_DIR}/lib")
 SET(FLTK_FLUID_EXECUTABLE "${FLTK_DIR}/bin/fluid.exe")
 INCLUDE_DIRECTORIES("${FLTK_INCLUDE_DIR}")
 
-SET(BOOST_ROOT "C:/Users/i028161/Tools/boost_1_49_0")
-find_package( Boost 1.36.0 )
-if(Boost_FOUND)
-   include_directories(${Boost_INCLUDE_DIRS})
-endif()
+SET(BOOST_ROOT "C:/Users/i028161/Tools/boost")
+MESSAGE(STATUS "** Search Boost root: ${BOOST_ROOT}")
+
+FIND_PACKAGE(Boost REQUIRED)
+
+MESSAGE(STATUS "** Boost Include: ${Boost_INCLUDE_DIR}")
+MESSAGE(STATUS "** Boost Libraries: ${Boost_LIBRARY_DIR}")
+MESSAGE(STATUS "** Boost Libraries: ${Boost_LIBRARIES}")
+
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 
 FIND_PACKAGE(FLTK REQUIRED)
 ADD_SUBDIRECTORY(src)

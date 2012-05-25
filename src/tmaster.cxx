@@ -2,6 +2,8 @@
 
 #include "tmaster.h"
 #include <FL/fl_ask.h>
+#include <iostream>
+#include <any.hpp>
 /**
    0 - no start. start possible
    1 - running, stop possible
@@ -9,7 +11,7 @@
 */
 static int status = 0; 
 static int curr_Elapsed = 0; 
-static const int time_length = 2; // min
+static const int time_length = 5; // min
 
 const int Get_NextAction(int s) {
   switch(s){
@@ -91,7 +93,9 @@ int main(int argc, char **argv) {
     main_Window->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
     { ticker = new Fl_Progress(120, 0, 825, 65);
       ticker->box(FL_FLAT_BOX);
+      ticker->color((Fl_Color)48);
       ticker->selection_color((Fl_Color)1);
+      ticker->align(Fl_Align(FL_ALIGN_CENTER));
       ticker->maximum(100);
       ticker->minimum(0);
     } // Fl_Progress* ticker
