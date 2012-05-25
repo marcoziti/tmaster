@@ -11,4 +11,7 @@ Time Master
 4. Build FLTK with cmake, mingw-w64.
 5. When you successfully build FLTK with cmake, you shall NOW be able to build tmaster with cmake as well.
 
+#### screenthos ####
+![screenshorts](https://github.com/xuejm1225/tmaster/blob/master/tmaster.png?raw=true)
+
 Enjoy.
